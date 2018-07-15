@@ -1,4 +1,6 @@
+
 language: go
+
 go:
   - "1.10"
 
@@ -6,35 +8,16 @@ env:
   - GIMME_OS=linux GIMME_ARCH=amd64
   - GIMME_OS=darwin GIMME_ARCH=amd64
   - GIMME_OS=windows GIMME_ARCH=amd64
-  global:
-    - PROJECT_NAME=go4microservice2azurekvbyenv
-    - CLUSTER_NAME=RelayServicesTest
+  - PROJECT_NAME=go4microservice2azurekvbyenv
+  - CLUSTER_NAME=RelayServicesTest
 
 # Install services
 services:
   - docker
-
-before_install:
-  - AZ_REPO=$(lsb_release -cs)
-  - echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
-    sudo tee /etc/apt/sources.list.d/azure-cli.list
-  - curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-  - sudo apt-get install apt-transport-https
-  - sudo apt-get update && sudo apt-get install azure-cli
-
+ 
 install:
   - go get -d -v ./...
 
 script:
   - go build -v ./...
   - go test -v ./...
-
-#branch: master  => deploy-prod.sh
-#branch: staging => deploy-staging.sh 
-#branch: dev     => deploy-test.sh
-deploy:
-  - provider: script
-    script: ./deploy/deploy-test.sh
-    skip_cleanup: true
-    on: 
-      branch: master
