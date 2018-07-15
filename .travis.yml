@@ -21,3 +21,13 @@ install:
 script:
   - go build -v ./...
   - go test -v ./...
+
+#branch: master  => deploy-prod.sh
+#branch: staging => deploy-staging.sh 
+#branch: dev     => deploy-test.sh
+deploy:
+  - provider: script
+    script: ./deploy/deploy-test.sh
+    skip_cleanup: true
+    on: 
+      branch: master
