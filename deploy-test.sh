@@ -11,3 +11,9 @@ docker tag alvaradojl/${PROJECT_NAME}:$TRAVIS_COMMIT alvaradojl/${PROJECT_NAME}:
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 docker push alvaradojl/${PROJECT_NAME}
+
+az login --service-principal --username "$AZURE_USERNAME" --password "$AZURE_PASSWORD" --tenant "$AZURE_TENANT"
+
+az aks get-credentials --resource-group test1 --name test1
+
+#kubectl apply -f ./kubernetes.yaml
