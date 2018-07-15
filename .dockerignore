@@ -1,1 +1,8 @@
 .DS_Store
+pkg
+test
+.gitignore
+.travis.yml
+deploy-test.sh
+LICENSE
+README.md

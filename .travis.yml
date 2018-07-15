@@ -32,7 +32,7 @@ script:
 #branch: dev     => deploy-test.sh
 deploy:
   - provider: script
-    script: ./deploy/deploy-test.sh
+    script: ./deploy-test.sh
     skip_cleanup: true
     on: 
       branch: master
