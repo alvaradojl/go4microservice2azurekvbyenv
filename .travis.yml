@@ -23,8 +23,8 @@ addons:
       - sourceline: 'deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ bionic main'
       key_url: 'https://packages.microsoft.com/keys/microsoft.asc'
     packages:
-    - apt-transport-https
-    - azure-cli
+      - apt-transport-https
+      - azure-cli
 
 before_install:
   - chmod +x ./deploy-test.sh
