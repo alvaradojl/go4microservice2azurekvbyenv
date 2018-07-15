@@ -14,6 +14,6 @@ docker push alvaradojl/${PROJECT_NAME}
 
 az login --service-principal --username "$AZURE_USERNAME" --password "$AZURE_PASSWORD" --tenant "$AZURE_TENANT"
 
-az aks get-credentials --resource-group test1 --name test1
+az aks get-credentials --resource-group RelayServices --name RelayServicesTest
 
-#kubectl apply -f ./kubernetes.yaml
+kubectl apply -f ./kubernetes.yaml

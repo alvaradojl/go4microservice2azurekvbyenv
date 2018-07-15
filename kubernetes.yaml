@@ -12,7 +12,7 @@ spec:
          app: go4microservice2azurekvbyenv
     spec:
       containers:
-      - image: alvaradojl/go4microservice2azurekvbyenv
+      - image: alvaradojl/go4microservice2azurekvbyenv:latest
         name: go4microservice2azurekvbyenv
         env:
          - name: JAEGER_AGENT_HOST
