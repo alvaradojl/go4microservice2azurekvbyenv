@@ -7,7 +7,7 @@ RUN go get "github.com/opentracing/opentracing-go/log"
 RUN go get "github.com/uber/jaeger-client-go/config"                  
 RUN go get "github.com/uber/jaeger-lib/metrics"
 RUN go get "github.com/spf13/viper"
-RUN CGO_ENABLED=0 GOOS=linux go build .
+RUN CGO_ENABLED=0 GOOS=linux go build ~/src/github.com/alvaradojl/go4microservice2azurekvbyenv/cmd/keyvault
 
 EXPOSE 8080
 

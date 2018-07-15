@@ -21,11 +21,12 @@ before_install:
   - chmod +x ./deploy-test.sh
 
 install:
-  - go get -d -v ./...
+#  - go get -d -v ./...
 
 script:
-  - go build -v ./cmd/keyvault/
-  - go test -v ./test/
+#  - go build -v ./cmd/keyvault/
+#  - go test -v ./test/
+#echo "stest"
 
 #branch: master  => deploy-prod.sh
 #branch: staging => deploy-staging.sh 
