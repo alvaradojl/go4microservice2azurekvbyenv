@@ -4,7 +4,7 @@ package keyvaultservice_test
 import (
 	"testing"
 
-	"github.com/swisscom-blockchain/relayservices-keyvault/pkg/keyvault"
+	"github.com/alvaradojl/go4microservice2azurekvbyenv/pkg/keyvault"
 )
 
 // Add_1And2_Return_3 tests that 1+2 equals 3
