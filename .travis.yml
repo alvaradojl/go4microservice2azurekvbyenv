@@ -12,7 +12,10 @@ env:
 # Install services
 services:
   - docker
- 
+
+before_install:
+  -chmod +x ./deploy/deploy-test.sh
+
 install:
   - go get -d -v ./...
 
