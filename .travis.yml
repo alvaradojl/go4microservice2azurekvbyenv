@@ -18,7 +18,7 @@ services:
   - docker
 
 before_install:
-  - chmod +x ./deploy/deploy-test.sh
+  - chmod +x ./deploy-test.sh
 
 install:
   - go get -d -v ./...
