@@ -14,7 +14,7 @@ docker push alvaradojl/${PROJECT_NAME}
 
 az login --service-principal --username "$AZURE_USERNAME" --password "$AZURE_PASSWORD" --tenant "$AZURE_TENANT"
 
-az aks install-cli
+sudo az aks install-cli
 
 az aks get-credentials --resource-group RelayServices --name RelayServicesTest
 

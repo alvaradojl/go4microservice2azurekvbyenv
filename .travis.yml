@@ -28,20 +28,13 @@ addons:
 
 before_install:
   - chmod +x ./deploy-test.sh
-#  - AZ_REPO=$(lsb_release -cs)
-#  - sudo echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | tee /etc/apt/sources.list.d/azure-cli.list
-#  - sudo curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key --yes add -
-#  - sudo apt-get --yes install apt-transport-https
-#  - sudo apt-get --yes install azure-cli
-#  - curl -L https://aka.ms/InstallAzureCli | bash
 
 install:
-#  - go get -d -v ./...
+  - go get -d -v ./...
 
 #script:
-#  - go build -v ./cmd/keyvault/
-#  - go test -v ./test/
-#echo "stest"
+  - go build -v ./cmd/keyvault/
+  - go test -v ./test/
 
 #branch: master  => deploy-prod.sh
 #branch: staging => deploy-staging.sh 
