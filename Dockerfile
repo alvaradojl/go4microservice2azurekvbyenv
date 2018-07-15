@@ -6,6 +6,7 @@ RUN go get "github.com/opentracing/opentracing-go"
 RUN go get "github.com/opentracing/opentracing-go/log"
 RUN go get "github.com/uber/jaeger-client-go/config"                  
 RUN go get "github.com/uber/jaeger-lib/metrics"
+RUN go get "github.com/spf13/viper"
 RUN CGO_ENABLED=0 GOOS=linux go build ./cmd/keyvault
 
 EXPOSE 8080
