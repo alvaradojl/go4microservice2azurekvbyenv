@@ -12,5 +12,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build ./cmd/keyvault
 EXPOSE 8080
 
 FROM scratch
-COPY --from=0 ./cmd/keyvault .
+COPY --from=0 /go/src/github.com/alvaradojl/go4microservice2azurekvbyenv/cmd/keyvault .
 ENTRYPOINT ["/keyvault"]
