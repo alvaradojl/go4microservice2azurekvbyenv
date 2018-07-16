@@ -19,6 +19,26 @@ spec:
            value: "localhost" #options: "jaeger-agent" or "localhost"
          - name: JAEGER_AGENT_PORT
            value: "6831"
+         - name: RELAYSERVICES_KEYVAULTAUTHCLIENTID
+           valueFrom:
+             secretKeyRef:
+               name: secrets
+               key: keyvaultauthclientid
+         - name: RELAYSERVICES_KEYVAULTAUTHCLIENTSECRET
+           valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: keyvaultauthclientsecret
+         - name: RELAYSERVICES_KEYVAULTAUTHENDPOINT
+           valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: keyvaultauthendpoint
+         - name: RELAYSERVICES_KEYVAULTSVCBASEENDPOINT
+           valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: keyvaultsvcbaseendpoint
         ports:
         - containerPort: 8080
       - image: jaegertracing/jaeger-agent:1.5.0
