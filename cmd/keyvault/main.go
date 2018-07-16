@@ -19,7 +19,7 @@ func main() {
 
 	log.Println("starting keyvault microservice app...")
 
-	tracer, closer := initJaeger("relayservicekeyvault")
+	tracer, closer := initJaeger("go4microservice2azurekvbyenv")
 
 	opentracing.SetGlobalTracer(tracer)
 

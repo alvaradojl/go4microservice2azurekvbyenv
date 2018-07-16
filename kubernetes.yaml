@@ -16,7 +16,7 @@ spec:
         name: go4microservice2azurekvbyenv
         env:
          - name: JAEGER_AGENT_HOST
-           value: "localhost" #options: "jaeger-agent" or "localhost"
+           value: "localhost" #sidecar pattern for jeagger agent
          - name: JAEGER_AGENT_PORT
            value: "6831"
          - name: RELAYSERVICES_KEYVAULTAUTHCLIENTID
