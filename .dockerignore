@@ -1,8 +1,7 @@
-.DS_Store
 pkg
 test
-.gitignore
-.travis.yml
 deploy-test.sh
+k8s-deployment.yaml
+k8s-service.yaml
 LICENSE
 README.md
