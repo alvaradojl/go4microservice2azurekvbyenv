@@ -17,18 +17,24 @@ RUN go get "github.com/uber/jaeger-client-go/config"
 RUN go get "github.com/uber/jaeger-lib/metrics"
 RUN go get "github.com/spf13/viper"
 # go to folder and build golang app
-RUN cd /src/cmd/keyvault && CGO_ENABLED=0 GOOS=linux go build -o keyvaultapp
+RUN cd /src/cmd/keyvault && CGO_ENABLED=0 GOOS=linux go build -a -tags netgo -ldflags '-w' -o keyvaultapp
 # use port 8080
 EXPOSE 8080
+
+# ssl certificates environment
+FROM alpine:latest as alpine
+RUN apk --no-cache add ca-certificates
+
 
 # deployment environment
 FROM scratch
 
 # copy ssl certificates
-COPY --from=build-env /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=build-env /etc/passwd /etc/passwd
+#COPY --from=build-env /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+#COPY --from=build-env /etc/passwd /etc/passwd
 
 WORKDIR /app
 # copy static executable
 COPY --from=build-env /src/cmd/keyvault/keyvaultapp .
+COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 ENTRYPOINT ["/app/keyvaultapp"]
