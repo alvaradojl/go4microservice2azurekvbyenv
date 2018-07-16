@@ -17,7 +17,7 @@ var httpClient = &http.Client{Transport: &nethttp.Transport{}} //TODO: refactor 
 
 func main() {
 
-	log.Println("starting application...")
+	log.Println("starting keyvault microservice app...")
 
 	tracer, closer := initJaeger("relayservicekeyvault")
 

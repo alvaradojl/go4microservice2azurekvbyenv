@@ -59,7 +59,11 @@ type keyVaultConfig struct {
 	KeyVaultAPIVersionParameter string
 }
 
-func getKeyVaultConfig() keyVaultConfig {
+func getKeyVaultConfig(ctx context.Context) (keyVaultConfig, error) {
+
+	span, _ := opentracing.StartSpanFromContext(ctx, "getKeyVaultConfig")
+	defer span.Finish()
+
 	var result = keyVaultConfig{}
 
 	viper.SetEnvPrefix("relayservices")
@@ -78,7 +82,7 @@ func getKeyVaultConfig() keyVaultConfig {
 	result.KeyVaultAuthResource = "https://vault.azure.net"
 	result.KeyVaultAPIVersionParameter = "?api-version=2016-10-01"
 
-	return result
+	return result, nil
 }
 
 func getSecret(w http.ResponseWriter, r *http.Request) {
@@ -109,17 +113,24 @@ func getSecret(w http.ResponseWriter, r *http.Request) {
 
 	infoCtx(ctx, "retrieving access token...")
 
-	kvconf := getKeyVaultConfig()
+	kvconf, err2 := getKeyVaultConfig(ctx)
+
+	if err2 != nil {
+		errorCtx(ctx, err2)
+		http.Error(w, "unable to retrieve secret (err2)", http.StatusInternalServerError)
+		return
+	}
 
 	url := kvconf.KeyVaultSvcBaseEndpoint + rb.KeyPath + kvconf.KeyVaultAPIVersionParameter
 
-	var err2 error
+	var err3 error
 	if len(accessToken) == 0 {
-		accessToken, err2 = getAccessToken(ctx)
+		accessToken, err3 = getAccessToken(ctx)
 
-		if err2 != nil {
-			errorCtx(ctx, err2)
-			http.Error(w, "unable to retrieve secret (err2)", http.StatusInternalServerError)
+		if err3 != nil {
+			errorCtx(ctx, err3)
+			http.Error(w, "unable to retrieve secret (err3)", http.StatusInternalServerError)
+			return
 		}
 	}
 
@@ -132,6 +143,7 @@ func getSecret(w http.ResponseWriter, r *http.Request) {
 	if err3 != nil {
 		errorCtx(ctx, err3)
 		http.Error(w, "unable to retrieve secret (err3)", http.StatusInternalServerError)
+		return
 	}
 
 	req = req.WithContext(ctx)
@@ -145,6 +157,7 @@ func getSecret(w http.ResponseWriter, r *http.Request) {
 	if err4 != nil {
 		errorCtx(ctx, err4)
 		http.Error(w, "unable to retrieve secret (err4)", http.StatusInternalServerError)
+		return
 	}
 
 	if resp.StatusCode == http.StatusOK {
@@ -156,13 +169,14 @@ func getSecret(w http.ResponseWriter, r *http.Request) {
 		if err5 != nil {
 			errorCtx(ctx, err5)
 			http.Error(w, "unable to retrieve secret (err5)", http.StatusInternalServerError)
+			return
 		}
 
 		_, _ = w.Write([]byte(kvResponse.Value))
 	} else if resp.StatusCode == http.StatusUnauthorized {
 		//TODO: refactor with circuit braker to get access token and try again multiple times
 		http.Error(w, "unable to retrieve secret (unathorized)", http.StatusInternalServerError)
-
+		return
 	}
 
 }
@@ -171,7 +185,12 @@ func getAccessToken(ctx context.Context) (string, error) {
 	span, _ := opentracing.StartSpanFromContext(ctx, "getAccessToken")
 	defer span.Finish()
 
-	kvconf := getKeyVaultConfig()
+	kvconf, err1 := getKeyVaultConfig(ctx)
+
+	if err1 != nil {
+		errorCtx(ctx, err1)
+		return "", err1
+	}
 
 	//	infoCtx(ctx, "login to keyvault access token auth : "+kvconf.KeyVaultAuthEndpoint)
 
@@ -181,12 +200,12 @@ func getAccessToken(ctx context.Context) (string, error) {
 	form.Add("client_secret", kvconf.KeyVaultAuthClientSecret)
 	form.Add("resource", kvconf.KeyVaultAuthResource)
 
-	req, err1 := http.NewRequest(http.MethodPost, kvconf.KeyVaultAuthEndpoint, strings.NewReader(form.Encode()))
+	req, err2 := http.NewRequest(http.MethodPost, kvconf.KeyVaultAuthEndpoint, strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	if err1 != nil {
-		errorCtx(ctx, err1)
-		return "", err1
+	if err2 != nil {
+		errorCtx(ctx, err2)
+		return "", err2
 	}
 
 	req = req.WithContext(ctx)
@@ -197,10 +216,10 @@ func getAccessToken(ctx context.Context) (string, error) {
 
 	token := new(AccessToken)
 
-	resp, err2 := httpClient.Do(req)
-	if err2 != nil {
-		errorCtx(ctx, err2)
-		return "", err2
+	resp, err3 := httpClient.Do(req)
+	if err3 != nil {
+		errorCtx(ctx, err3)
+		return "", err3
 	}
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
@@ -208,11 +227,11 @@ func getAccessToken(ctx context.Context) (string, error) {
 
 	//	infoCtx(ctx, "response body: "+bodyString)
 
-	err3 := json.Unmarshal(bodyBytes, token)
+	err4 := json.Unmarshal(bodyBytes, token)
 
-	if err3 != nil {
-		errorCtx(ctx, err3)
-		return "", err3
+	if err4 != nil {
+		errorCtx(ctx, err4)
+		return "", err4
 	}
 
 	//	infoCtx(ctx, "access token found: "+token.Access_token)
