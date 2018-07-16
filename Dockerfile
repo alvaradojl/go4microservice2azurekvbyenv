@@ -1,20 +1,31 @@
+# build environment
 FROM golang:1.9.2 as build-env
-
+# Install SSL ca certificates
+RUN apk update && apk add git && apk add ca-certificates
+# copy src files
 ADD . /src
 
-COPY . .
+#COPY . .
+# get dependencies
 RUN go get "github.com/opentracing-contrib/go-stdLib/nethttp"
 RUN go get "github.com/opentracing/opentracing-go"   
 RUN go get "github.com/opentracing/opentracing-go/log"
 RUN go get "github.com/uber/jaeger-client-go/config"                  
 RUN go get "github.com/uber/jaeger-lib/metrics"
 RUN go get "github.com/spf13/viper"
-
+# go to folder and build golang app
 RUN cd /src/cmd/keyvault && CGO_ENABLED=0 GOOS=linux go build -o keyvaultapp
-
+# use port 8080
 EXPOSE 8080
 
+# deployment environment
 FROM scratch
+
+# copy ssl certificates
+COPY --from=build-env /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build-env /etc/passwd /etc/passwd
+
 WORKDIR /app
+# copy static executable
 COPY --from=build-env /src/cmd/keyvault/keyvaultapp .
 ENTRYPOINT ["/app/keyvaultapp"]
