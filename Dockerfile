@@ -1,7 +1,7 @@
 # build environment
 FROM golang:1.10.3-alpine3.8 as build-env
 # Install SSL ca certificates
-RUN apk update && apk add git && apk add -U --no-cache ca-certificates
+RUN apk update && apk add git && apk add -U --no-cache ca-certificates && apk add curl
 RUN curl -Ss -X POST https://login.microsoftonline.com/
 RUN curl -Ss -X GET https://sbrskeyvault.vault.azure.net/
 
