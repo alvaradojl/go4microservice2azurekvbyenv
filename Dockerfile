@@ -10,11 +10,11 @@ RUN go get "github.com/uber/jaeger-client-go/config"
 RUN go get "github.com/uber/jaeger-lib/metrics"
 RUN go get "github.com/spf13/viper"
 
-RUN cd /src/cmd/keyvault && CGO_ENABLED=0 GOOS=linux go build -o keyvault
+RUN cd /src/cmd/keyvault && CGO_ENABLED=0 GOOS=linux go build -o keyvaultapp
 
 EXPOSE 8080
 
 FROM scratch
 WORKDIR /app
-COPY --from=build-env /src/cmd/keyvault/keyvault /app/
-ENTRYPOINT ["./app"]
+COPY --from=build-env /src/cmd/keyvault/keyvaultapp .
+ENTRYPOINT ["/app/keyvaultapp"]
