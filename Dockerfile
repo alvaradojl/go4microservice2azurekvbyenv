@@ -1,8 +1,8 @@
 # build environment
-FROM golang:1.10.3 as build-env
+FROM golang:1.10.3-1.10.3-alpine3.8 as build-env
 # Install SSL ca certificates
-#RUN apk update && apk add git && apk add ca-certificates
-RUN apk add ca-certificates
+RUN apk update && apk add git && apk add ca-certificates
+
 # copy src files
 ADD . /src
 
